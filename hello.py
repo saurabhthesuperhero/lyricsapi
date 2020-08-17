@@ -4,6 +4,8 @@ import requests
 app = Flask(__name__)
 
 @app.route('/')
+def ello():
+	return 'hello'
 @app.route('/<lstring>')
 
 def hello_world(lstring):
