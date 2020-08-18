@@ -13,9 +13,6 @@ def hello_world(lstring):
     res=requests.get('https://search.azlyrics.com/search.php?q=%s'%lstring,timeout=8)
     soup=bs4.BeautifulSoup(res.text,'lxml')
     result=soup.find_all('td',{"class":"text-left"})
-    i=1
-    global x
-    x=['0']*10
     y=[]
     col_link=[]
 
@@ -28,5 +25,5 @@ def hello_world(lstring):
     string_list="<br>".join(str(i) for i in col_link)
 
     dictionary=dict(zip(col_link,y))
-    return jsonify(res.content)
+    return jsonify(dictionary)
 
