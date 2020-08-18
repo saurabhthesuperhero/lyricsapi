@@ -10,7 +10,7 @@ def ello():
 
 def hello_world(lstring):
     #lstring='Perfect ed sheeran'
-    res=requests.get('https://search.azlyrics.com/search.php?q=%s'%lstring)
+    res=requests.get('https://search.azlyrics.com/search.php?q=%s'%lstring,timeout=8)
     soup=bs4.BeautifulSoup(res.text,'lxml')
     result=soup.find_all('td',{"class":"text-left"})
     i=1
