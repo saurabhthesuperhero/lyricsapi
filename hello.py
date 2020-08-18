@@ -6,8 +6,8 @@ app = Flask(__name__)
 @app.route('/')
 def ello():
 	return 'Lyrics API'
-@app.route('/search=<lstring>')
 
+@app.route('/search=<lstring>')
 def hello_world(lstring):
     #lstring='Perfect ed sheeran'
     res=requests.get('https://search.azlyrics.com/search.php?q=%s'%lstring,timeout=5)
@@ -34,7 +34,24 @@ def hello_world(lstring):
     string_list="<br>".join(str(i) for i in col_link)
 
     dictionary=dict(zip(col_link,y))
-    return str(dictionary)
+    return jsonify(dictionary)
     
 
+
+@app.route('/link=<path:input_url>')
+def showlyrics(input_url):
+
+    #linkss=int(input("Enter song number ........"))
+    print("hello")
+    lres=requests.get(input_url)
+    lsoup=bs4.BeautifulSoup(lres.text,'lxml')
+
+    lresult=lsoup.find_all('div',{'class':'col-xs-12'})
+    check='<!-- MxM banner -->'
+    for lyric in lresult [1:2]:
+        lyricss=lyric.text
+
+
+    lindex=lyricss.find('Submit Corrections')
+    return jsonify(lyricss[10:lindex])
 
