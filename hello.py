@@ -14,7 +14,7 @@ def hello_world(lstring):
     soup=bs4.BeautifulSoup(res.text,'lxml')
     result=soup.find_all('td',{"class":"text-left"})
     y=[]
-    col_link=[]
+    global col_link=[]
 
     for link in result [0:5]:
         #print(link.text)
