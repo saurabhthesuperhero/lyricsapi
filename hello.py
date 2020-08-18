@@ -36,5 +36,5 @@ def hello_world(lstring):
     dictionary=dict(zip(col_link,y))
     return str(dictionary)
     
-app.run()
+
 
