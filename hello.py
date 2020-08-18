@@ -19,7 +19,7 @@ def hello_world(lstring):
 
     for link in result [0:5]:
         #print(link.text)
-        col_link.append(link.text) 
+        col_link.append(1) 
         y.append(link.find('a').get('href'))
     
         # i=i+1
