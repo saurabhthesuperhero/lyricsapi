@@ -28,5 +28,5 @@ def hello_world(lstring):
     string_list="<br>".join(str(i) for i in col_link)
 
     dictionary=dict(zip(col_link,y))
-    return jsonify(dictionary)
+    return jsonify(res.content)
 
