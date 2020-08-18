@@ -5,12 +5,12 @@ app = Flask(__name__)
 
 @app.route('/')
 def ello():
-	return 'hello'
-@app.route('/<lstring>')
+	return 'Lyrics API'
+@app.route('/search=<lstring>')
 
 def hello_world(lstring):
     #lstring='Perfect ed sheeran'
-    res=requests.get('https://search.azlyrics.com/search.php?q=%s'%lstring,timeout=8)
+    res=requests.get('https://search.azlyrics.com/search.php?q=%s'%lstring,timeout=5)
     soup=bs4.BeautifulSoup(res.text,'lxml')
     result=soup.find_all('td',{"class":"text-left"})
     y=[]
@@ -19,7 +19,13 @@ def hello_world(lstring):
 
     for link in result [0:5]:
         #print(link.text)
-        col_link.append(link.text) 
+        
+        temp=(str(link.text[3:]).find('\n'))#ignoring first \n and will stop after second \n
+        # -creepy but good
+       # print(link.text[3:temp+3])
+
+        
+        col_link.append(link.text[3:temp+3]) 
         y.append(link.find('a').get('href'))
 
   
@@ -29,4 +35,6 @@ def hello_world(lstring):
 
     dictionary=dict(zip(col_link,y))
     return str(dictionary)
+    
+app.run(debug=True)
 
