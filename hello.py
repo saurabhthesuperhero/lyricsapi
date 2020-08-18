@@ -21,12 +21,12 @@ def hello_world(lstring):
         #print(link.text)
         col_link.append(link.text) 
         y.append(link.find('a').get('href'))
-        return link.text
+
   
     
         # i=i+1
     string_list="<br>".join(str(i) for i in col_link)
 
     dictionary=dict(zip(col_link,y))
-    return jsonify(y)
+    return jsonify(result)
 
