@@ -47,7 +47,6 @@ def showlyrics(input_url):
 def showlyricsnotapi(input_url):
 
     #linkss=int(input("Enter song number ........"))
-    print("hello")
     lres=requests.get(input_url)
     lsoup=bs4.BeautifulSoup(lres.text,'lxml')
 
