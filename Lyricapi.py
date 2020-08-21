@@ -35,9 +35,14 @@ def showlyrics(input_url):
     for lyric in lresult [1:2]:
         lyricss=lyric.text
 
+    lyricss=lyricss.replace("\n\n\n\n\n","\n")
+    lyricss=lyricss.replace("\n\n\n","\n")
+
+    lyricss=lyricss[lyricss.find('lyrics')+6:]
+    lyricss=lyricss[lyricss.find('Lyrics')+6:]
 
     lindex=lyricss.find('Submit Corrections')
-    data=[{"data":lyricss[10:lindex]}]
+    data=[{"data":lyricss[1:lindex]}]
     return jsonify(data=data,status=200)
 
 
@@ -54,6 +59,7 @@ def showlyricsnotapi(input_url):
     check='<!-- MxM banner -->'
     for lyric in lresult [1:2]:
         lyricss=lyric.text
+
 
 
     lindex=lyricss.find('Submit Corrections')
