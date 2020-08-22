@@ -10,7 +10,7 @@ def ello():
 def givelyrics(input_url):
 
     #linkss=int(input("Enter song number ........"))
-    print("hello")
+
     lres=requests.get(input_url)
     lsoup=bs4.BeautifulSoup(lres.text,'lxml')
 
@@ -33,7 +33,7 @@ def givelyrics(input_url):
 @app.route('/search=<lstring>')
 def hello_world(lstring):
     #lstring='Perfect ed sheeran'
-    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring,timeout=5)
+    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring)
     soup=bs4.BeautifulSoup(res.text,'lxml')
     result=soup.find_all('td',{"class":"text-left"})
     data=[]
