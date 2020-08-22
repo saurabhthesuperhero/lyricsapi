@@ -7,6 +7,29 @@ app = Flask(__name__)
 def ello():
 	return 'Lyrics API'
 
+def givelyrics(input_url):
+
+    #linkss=int(input("Enter song number ........"))
+    print("hello")
+    lres=requests.get(input_url)
+    lsoup=bs4.BeautifulSoup(lres.text,'lxml')
+
+    lresult=lsoup.find_all('div',{'class':'col-xs-12'})
+    check='<!-- MxM banner -->'
+    for lyric in lresult [1:2]:
+        lyricss=lyric.text
+
+    lyricss=lyricss.replace("\n\n\n\n\n","\n")
+    lyricss=lyricss.replace("\n\n\n","\n")
+
+    lyricss=lyricss[lyricss.find('lyrics')+6:]
+    lyricss=lyricss[lyricss.find('Lyrics')+6:]
+
+    lindex=lyricss.find('Submit Corrections')
+    data=lyricss[1:lindex]
+    return data
+
+
 @app.route('/search=<lstring>')
 def hello_world(lstring):
     #lstring='Perfect ed sheeran'
@@ -17,7 +40,11 @@ def hello_world(lstring):
     for link in result [0:6]:
         
         temp=(str(link.text[3:]).find('\n'))#ignoring first \n and will stop after second \n
-        data.append({"name":link.text[3:temp+3],"link":link.find('a').get('href')})
+        url=link.find('a').get('href')
+        lyrics=givelyrics(url)
+        name=link.text[3:temp+3]
+        name=name[name.find(".")+2:]
+        data.append({"name":name,"link":url,"lyrics":lyrics})
     return jsonify(data=data,status=200)
     
 
