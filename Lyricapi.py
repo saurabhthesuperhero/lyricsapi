@@ -33,8 +33,8 @@ def givelyrics(input_url):
 @app.route('/search=<lstring>')
 def hello_world(lstring):
     #lstring='Perfect ed sheeran'
-    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring)
-    soup=bs4.BeautifulSoup(res.text,'lxml')
+    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers={"User-Agent": "XY"})
+    soup=bs4.BeautifulSoup(res.content,'html.parser')
     result=soup.find_all('td',{"class":"text-left"})
     data=[]
     for link in result [0:6]:
