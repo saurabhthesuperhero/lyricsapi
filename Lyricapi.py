@@ -53,8 +53,9 @@ def hello_world(lstring):
 def test():
     lstring='Perfect ed sheeran'
 
-    
-    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers={"User-Agent": "XY"})
+    agent = {"User-Agent":'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'}
+
+    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers=agent)
     # soup=bs4.BeautifulSoup(res.content,'html.parser')
     # result=soup.find_all('td',{"class":"text-left"})
 
