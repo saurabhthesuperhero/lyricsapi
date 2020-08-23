@@ -2,35 +2,83 @@ from flask import Flask,jsonify,render_template
 import bs4
 import requests,json
 from fake_useragent import UserAgent
-
+from proxy import Random_Proxy
+import re
+import os
 app = Flask(__name__)
 
 @app.route('/')
 def ello():
 	return 'Lyrics API'
 
-def givelyrics(input_url):
+def scrape_song_lyrics(url):
+    cookies = dict(privacypolicy='1xxxxxxxxxxxxxxxx')
+    header = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0',}
+    # session=requests.Session()
+    try:
+        page =requests.get(url,headers=header)
+        html = BeautifulSoup(page.content, 'lxml')
+        lyrics = html.find('div', class_='lyrics').get_text()   
+    #remove identifiers like chorus, verse, etc
+    except:
+        try:
+            page =requests.get(url,headers=header)
+            html = BeautifulSoup(page.content, 'lxml')
+            lyrics = html.find('p', class_='').get_text()
+        except:
+            lyrics="try again after some time"
+    lyrics = re.sub(r'[\(\[].*?[\)\]]', '', lyrics)
+    lyrics = os.linesep.join([s for s in lyrics.splitlines() if s])         
+    return lyrics# DEMO
+    
+@app.route('/search=<lstring>')
+def apifunction(lstring):
 
-    #linkss=int(input("Enter song number ........"))
-    headers = {'User-Agent': UserAgent().random}
+    url="http://api.genius.com"
+    headers={'Authorization':'Bearer 7uekd78i4cKTHJt_X4Zf4RgV-grVNT6VwSlC1eVfSKGIc9w0OAVxy-ZJEum2C3Ra'}
+    query=lstring
+    url=url+'/search?q='+query
+    res=requests.get(url,headers=headers)
+    dictionary=json.dumps(res.json(),sort_keys=True,indent=4)
+    res=res.json()
+    data=res['response']['hits']
+    title_songs=[]
+    link_songs=[]
+    lyric_songs=[]
+    for i in data:
+        title_songs.append(i['result']['full_title'])
+        link_songs.append(i['result']['url'])
+        lyric_songs.append(scrape_song_lyrics(i['result']['url']))
 
-    lres=requests.get(input_url,headers)
-    lsoup=bs4.BeautifulSoup(lres.text,'lxml')
+    data=[]
+    for i in range(len(title_songs)):
+        data.append({"name":title_songs[i],"link":link_songs[i],"lyrics":lyric_songs[i]})
+    return jsonify(data=data,status=200)
 
-    lresult=lsoup.find_all('div',{'class':'col-xs-12'})
-    check='<!-- MxM banner -->'
-    for lyric in lresult [1:2]:
-        lyricss=lyric.text
 
-    lyricss=lyricss.replace("\n\n\n\n\n","\n")
-    lyricss=lyricss.replace("\n\n\n","\n")
 
-    lyricss=lyricss[lyricss.find('lyrics')+6:]
-    lyricss=lyricss[lyricss.find('Lyrics')+6:]
+# def givelyrics(input_url):
 
-    lindex=lyricss.find('Submit Corrections')
-    data=lyricss[1:lindex]
-    return data
+#     #linkss=int(input("Enter song number ........"))
+#     headers = {'User-Agent': UserAgent().random}
+
+#     lres=requests.get(input_url,headers)
+#     lsoup=bs4.BeautifulSoup(lres.text,'lxml')
+
+#     lresult=lsoup.find_all('div',{'class':'col-xs-12'})
+#     check='<!-- MxM banner -->'
+#     for lyric in lresult [1:2]:
+#         lyricss=lyric.text
+
+#     lyricss=lyricss.replace("\n\n\n\n\n","\n")
+#     lyricss=lyricss.replace("\n\n\n","\n")
+
+#     lyricss=lyricss[lyricss.find('lyrics')+6:]
+#     lyricss=lyricss[lyricss.find('Lyrics')+6:]
+
+#     lindex=lyricss.find('Submit Corrections')
+#     data=lyricss[1:lindex]
+#     return data
 
 
 @app.route('/search=<lstring>')
@@ -59,12 +107,13 @@ def test():
     lstring='Perfect ed sheeran'
 
     headers = {'User-Agent': UserAgent().random}
-
-    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers=headers)
+    url='https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring
+    proxy=Random_Proxy()
+    r=proxy.Proxy_Request(url=url,request_type='get')
     # soup=bs4.BeautifulSoup(res.content,'html.parser')
     # result=soup.find_all('td',{"class":"text-left"})
 
-    return res.content
+    return r.content
 
 #api
 @app.route('/link=<path:input_url>')
@@ -126,7 +175,7 @@ def callapi():
 @app.route('/demo')
 def demo():
 	listlyrics=callapi()
-	print(listlyrics)
+
 	return render_template('lyricui.html')
 
 
