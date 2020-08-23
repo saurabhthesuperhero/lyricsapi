@@ -1,5 +1,5 @@
 from flask import Flask,jsonify,render_template
-import bs4
+from bs4 import BeautifulSoup
 import requests,json
 from fake_useragent import UserAgent
 from proxy import Random_Proxy
@@ -11,52 +11,87 @@ app = Flask(__name__)
 def ello():
 	return 'Lyrics API'
 
-def scrape_song_lyrics(url):
-    cookies = dict(privacypolicy='1xxxxxxxxxxxxxxxx')
+
+
+def scraplyrics(url):
     header = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0',}
-    header=UserAgent()
-    # session=requests.Session()
-    try:
-        page =requests.get(url,headers=header)
-        html = BeautifulSoup(page.content, 'lxml')
-        lyrics = html.find('div', class_='lyrics').get_text()   
-    #remove identifiers like chorus, verse, etc
-    except:
-        try:
-            page =requests.get(url,headers=header)
-            html = BeautifulSoup(page.content, 'lxml')
-            lyrics = html.find('p', class_='').get_text()
-        except:
-            lyrics="try again after some time"
-    lyrics = re.sub(r'[\(\[].*?[\)\]]', '', lyrics)
-    lyrics = os.linesep.join([s for s in lyrics.splitlines() if s])         
-    return lyrics# DEMO
+
+    res=requests.get(url,headers=header)
+    html=BeautifulSoup(res.content,'lxml')
+    lyric=html.find("p",{"id":"songLyricsDiv"}).get_text()
+    return lyric
+
 
 @app.route('/search=<lstring>')
-def apifunction(lstring):
-
-    url="http://api.genius.com"
-    headers={'Authorization':'Bearer 7uekd78i4cKTHJt_X4Zf4RgV-grVNT6VwSlC1eVfSKGIc9w0OAVxy-ZJEum2C3Ra'}
-    query=lstring
-    url=url+'/search?q='+query
-    res=requests.get(url,headers=headers)
-    dictionary=json.dumps(res.json(),sort_keys=True,indent=4)
-    res=res.json()
-    data=res['response']['hits']
-    title_songs=[]
-    link_songs=[]
-    lyric_songs=[]
-    for i in data:
-        title_songs.append(i['result']['full_title'])
-        link_songs.append(i['result']['url'])
-        lyric_songs.append(scrape_song_lyrics(i['result']['url']))
-
+def songlistapi(lstring):
+    url="http://www.songlyrics.com/index.php?section=search&searchW="+lstring+"&submit=Search&searchIn1=artist&searchIn2=album&searchIn3=song"
+    res=requests.get(url)
+    html=BeautifulSoup(res.content,'lxml')
+    x=html.find_all("div",class_="serpresult")
+    name=[]
+    link=[]
+    lyric=[]
+    for i in x[:7]:
+        link.append(i.find('a').get('href'))
+        name.append(i.find('a').get('title'))
+        lyric.append(scraplyrics(i.find('a').get('href')))
+        # print(i.find('a').get('href'),": ",i.find('a').get('title'),"\n")
+    # div.serpresult:nth-child(6) > h3:nth-child(2)
+    # for i in range(len(name)):
+    #   print(name[i],link[i],lyric[i],"\n")
     data=[]
-    for i in range(len(title_songs)):
-        data.append({"name":title_songs[i],"link":link_songs[i],"lyrics":lyric_songs[i]})
+    for i in range(len(name)):
+        data.append({"name":name[i],"link":link[i],"lyrics":lyric[i]})
     return jsonify(data=data,status=200)
 
 
+
+
+
+
+# def scrape_song_lyrics(url):
+#     cookies = dict(privacypolicy='1xxxxxxxxxxxxxxxx')
+#     header = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0',}
+#     header=UserAgent()
+#     # session=requests.Session()
+#     try:
+#         page =requests.get(url,headers=header)
+#         html = BeautifulSoup(page.content, 'lxml')
+#         lyrics = html.find('div', class_='lyrics').get_text()   
+#     #remove identifiers like chorus, verse, etc
+#     except:
+#         try:
+#             page =requests.get(url,headers=header)
+#             html = BeautifulSoup(page.content, 'lxml')
+#             lyrics = html.find('p', class_='').get_text()
+#         except:
+#             lyrics="try again after some time"
+#     lyrics = re.sub(r'[\(\[].*?[\)\]]', '', lyrics)
+#     lyrics = os.linesep.join([s for s in lyrics.splitlines() if s])         
+#     return lyrics# DEMO
+
+# def apifunction(lstring):
+
+#     url="http://api.genius.com"
+#     headers={'Authorization':'Bearer 7uekd78i4cKTHJt_X4Zf4RgV-grVNT6VwSlC1eVfSKGIc9w0OAVxy-ZJEum2C3Ra'}
+#     query=lstring
+#     url=url+'/search?q='+query
+#     res=requests.get(url,headers=headers)
+#     dictionary=json.dumps(res.json(),sort_keys=True,indent=4)
+#     res=res.json()
+#     data=res['response']['hits']
+#     title_songs=[]
+#     link_songs=[]
+#     lyric_songs=[]
+#     for i in data:
+#         title_songs.append(i['result']['full_title'])
+#         link_songs.append(i['result']['url'])
+#         lyric_songs.append(scrape_song_lyrics(i['result']['url']))
+
+#     data=[]
+#     for i in range(len(title_songs)):
+#         data.append({"name":title_songs[i],"link":link_songs[i],"lyrics":lyric_songs[i]})
+#     return jsonify(data=data,status=200)
 
 # def givelyrics(input_url):
 
@@ -82,7 +117,6 @@ def apifunction(lstring):
 #     return data
 
 
-@app.route('/search=<lstring>')
 def hello_world(lstring):
     #lstring='Perfect ed sheeran'
     headers = {'User-Agent': UserAgent().random}
