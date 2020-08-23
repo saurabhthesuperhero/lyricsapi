@@ -14,6 +14,7 @@ def ello():
 def scrape_song_lyrics(url):
     cookies = dict(privacypolicy='1xxxxxxxxxxxxxxxx')
     header = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:32.0) Gecko/20100101 Firefox/32.0',}
+    header=UserAgent()
     # session=requests.Session()
     try:
         page =requests.get(url,headers=header)
@@ -30,7 +31,7 @@ def scrape_song_lyrics(url):
     lyrics = re.sub(r'[\(\[].*?[\)\]]', '', lyrics)
     lyrics = os.linesep.join([s for s in lyrics.splitlines() if s])         
     return lyrics# DEMO
-    
+
 @app.route('/search=<lstring>')
 def apifunction(lstring):
 
