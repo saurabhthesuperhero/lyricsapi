@@ -73,7 +73,7 @@ def songlistapi(lstring):
 # def apifunction(lstring):
 
 #     url="http://api.genius.com"
-#     headers={'Authorization':'Bearer 7uekd78i4cKTHJt_X4Zf4RgV-grVNT6VwSlC1eVfSKGIc9w0OAVxy-ZJEum2C3Ra'}
+#     headers={'Authorization':''}
 #     query=lstring
 #     url=url+'/search?q='+query
 #     res=requests.get(url,headers=headers)
