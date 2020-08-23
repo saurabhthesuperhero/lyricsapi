@@ -46,6 +46,12 @@ def hello_world(lstring):
         name=name[name.find(".")+2:]
         data.append({"name":name,"link":url,"lyrics":lyrics})
     return jsonify(data=data,status=200)
+
+
+# tets for heroku
+@app.route('/test')
+def test():
+    return "test me"
     
 
 #api
