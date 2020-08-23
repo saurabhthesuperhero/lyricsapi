@@ -1,6 +1,8 @@
 from flask import Flask,jsonify,render_template
 import bs4
 import requests,json
+from fake_useragent import UserAgent
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -10,8 +12,9 @@ def ello():
 def givelyrics(input_url):
 
     #linkss=int(input("Enter song number ........"))
+    headers = {'User-Agent': UserAgent().random}
 
-    lres=requests.get(input_url)
+    lres=requests.get(input_url,headers)
     lsoup=bs4.BeautifulSoup(lres.text,'lxml')
 
     lresult=lsoup.find_all('div',{'class':'col-xs-12'})
@@ -33,7 +36,9 @@ def givelyrics(input_url):
 @app.route('/search=<lstring>')
 def hello_world(lstring):
     #lstring='Perfect ed sheeran'
-    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers={"User-Agent": "XY"})
+    headers = {'User-Agent': UserAgent().random}
+
+    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers=headers)
     soup=bs4.BeautifulSoup(res.content,'html.parser')
     result=soup.find_all('td',{"class":"text-left"})
     data=[]
@@ -53,7 +58,7 @@ def hello_world(lstring):
 def test():
     lstring='Perfect ed sheeran'
 
-    headers = {"User-Agent":"Mozilla/5.0"}
+    headers = {'User-Agent': UserAgent().random}
 
     res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers=headers)
     # soup=bs4.BeautifulSoup(res.content,'html.parser')
@@ -67,7 +72,9 @@ def showlyrics(input_url):
 
     #linkss=int(input("Enter song number ........"))
     print("hello")
-    lres=requests.get(input_url)
+    headers = {'User-Agent': UserAgent().random}
+
+    lres=requests.get(input_url,headers)
     lsoup=bs4.BeautifulSoup(lres.text,'lxml')
 
     lresult=lsoup.find_all('div',{'class':'col-xs-12'})
@@ -92,7 +99,9 @@ def showlyrics(input_url):
 def showlyricsnotapi(input_url):
 
     #linkss=int(input("Enter song number ........"))
-    lres=requests.get(input_url)
+    headers = {'User-Agent': UserAgent().random}
+
+    lres=requests.get(input_url,headers)
     lsoup=bs4.BeautifulSoup(lres.text,'lxml')
 
     lresult=lsoup.find_all('div',{'class':'col-xs-12'})
@@ -107,13 +116,12 @@ def showlyricsnotapi(input_url):
     return (data)
 
 def callapi():
-	import requests,json
-
-	url='http://127.0.0.1:5000/search=blank%20space'
-
-	res=requests.get(url)
-	res=json.loads(res.content)
-	return res['data']
+    import requests,json
+    url='http://127.0.0.1:5000/search=blank%20space'
+    headers = {'User-Agent': UserAgent().random}
+    res=requests.get(url,headers)
+    res=json.loads(res.content)
+    return res['data']
 
 @app.route('/demo')
 def demo():
