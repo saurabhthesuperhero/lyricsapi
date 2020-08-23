@@ -51,8 +51,14 @@ def hello_world(lstring):
 # tets for heroku
 @app.route('/test')
 def test():
-    return "test me"
+    lstring='Perfect ed sheeran'
+
     
+    res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers={"User-Agent": "XY"})
+    soup=bs4.BeautifulSoup(res.content,'html.parser')
+    result=soup.find_all('td',{"class":"text-left"})
+
+    return result
 
 #api
 @app.route('/link=<path:input_url>')
