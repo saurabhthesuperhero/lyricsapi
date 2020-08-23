@@ -55,10 +55,10 @@ def test():
 
     
     res=requests.get('https://search.azlyrics.com/search.php?q=%s&w=songs'%lstring, headers={"User-Agent": "XY"})
-    soup=bs4.BeautifulSoup(res.content,'html.parser')
-    result=soup.find_all('td',{"class":"text-left"})
+    # soup=bs4.BeautifulSoup(res.content,'html.parser')
+    # result=soup.find_all('td',{"class":"text-left"})
 
-    return result
+    return res.content
 
 #api
 @app.route('/link=<path:input_url>')
