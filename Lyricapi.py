@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def ello():
-	return 'Lyrics API'
+	return render_template('home.html')
 
 
 

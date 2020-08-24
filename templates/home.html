@@ -1,0 +1,32 @@
+<html>
+    <body>
+    <h1 id="lyrics-api-public-api">Lyrics Api -Public APi</h1>
+<h2 id="what-it-can-do-">What it can do ?</h2>
+<ul>
+<li>Give list of songs to your query</li>
+<li>will give json of selected song lyrics</li>
+</ul>
+<h2 id="demo-">Demo :</h2>
+<p>Click to have fun : <a href="https://apilyrics.herokuapp.com/demo">https://apilyrics.herokuapp.com/demo</a></p>
+<h2 id="how-to-use-">How to use?</h2>
+<p>Call : <a href="https://apilyrics.herokuapp.com/search=query">https://apilyrics.herokuapp.com/search=query</a>
+where query can be: song name, artist name, album name.</p>
+<h2 id="sample-python-code-">Sample Python Code:</h2>
+<pre><code>import requests,json
+def callapi(query):
+    url=<span class="hljs-string">'http://apilyrics.herokuapp.com/search='</span>+query
+    <span class="hljs-keyword">res</span>=requests.<span class="hljs-built_in">get</span>(url)
+    <span class="hljs-keyword">res</span>=json.loads(<span class="hljs-keyword">res</span>.content)
+    <span class="hljs-keyword">print</span>(<span class="hljs-keyword">res</span>)
+
+callapi(<span class="hljs-string">"blank space"</span>)
+</code></pre><p>   It will Return response within milliseconds with status=200.</p>
+<h2 id="how-i-made-it-">How I made it:</h2>
+<ul>
+<li>Python</li>
+<li>Flask</li>
+<li>Html,CSS</li>
+<li>AJAX,JS</li>
+</ul>
+</body>
+</html>
