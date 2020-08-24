@@ -60,14 +60,13 @@
 
   <script>
     let fetchb = document.getElementById("searchb");
-    url = "http://127.0.0.1:5000/search="
+    url = "http://apilyrics.herokuapp.com/search="
     fetchb.addEventListener('click', getinput);
 
     function getinput() {
       var str = document.getElementById('inputsearch').value;
 
       const xhr = new XMLHttpRequest();
-      console.log("u clicked" + url + str);
       xhr.open('GET', url + str, true);
       xhr.onload = function () {
         if (this.status === 200) {
