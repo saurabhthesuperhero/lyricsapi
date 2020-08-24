@@ -54,7 +54,7 @@ def demo():
     return render_template('lyricui.html')
 
 
-@app.route('/demo/view>',methods=['GET', 'POST'])
+@app.route('/demo/view',methods=['GET', 'POST'])
 def viewlyric():
     input_url=frequest.form.get('link')
     xx=scraplyrics(input_url)
