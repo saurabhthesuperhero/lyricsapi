@@ -1,4 +1,5 @@
 from flask import Flask,jsonify,render_template
+from flask import request as frequest
 from bs4 import BeautifulSoup
 import requests,json
 from fake_useragent import UserAgent
@@ -53,8 +54,9 @@ def demo():
     return render_template('lyricui.html')
 
 
-@app.route('/demo/view=<path:input_url>',methods=['GET', 'POST'])
-def viewlyric(input_url):
+@app.route('/demo/view>',methods=['GET', 'POST'])
+def viewlyric():
+    input_url=frequest.form.get('link')
     xx=scraplyrics(input_url)
     return render_template('viewlyric.html',lyric=str(xx))
 

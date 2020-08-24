@@ -77,7 +77,8 @@
 
           xx = "";
           for (i in obj['data']) {
-            xx += ` <form action="/demo/view=${obj['data'][i].link}" method="post" class="p-2 sm:w-1/2 w-full" method="GET">
+            xx += ` <form action="/demo/view" method="post" class="p-2 sm:w-1/2 w-full" >
+            <input type="hidden" name="link" value=${obj['data'][i].link}>
  <button type="submit" >       
             <div class="bg-gray-200 rounded flex p-4 h-full items-center">
               <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
